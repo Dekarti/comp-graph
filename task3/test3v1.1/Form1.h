@@ -96,7 +96,7 @@ namespace test3v11 {
 				 this->Load += gcnew System::EventHandler(this, &Form1::Form1_Load);
 				 this->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &Form1::Form1_Paint);
 				 this->DockChanged += gcnew System::EventHandler(this, &Form1::btnOpen_Click);
-				 this->Resize += gcnew System::EventHandler(this, &Form1::Form1_Load);
+				 this->Resize += gcnew System::EventHandler(this, &Form1::Form1_Resize);
 				 this->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &Form1::Form1_KeyDown);
 				 this->ResumeLayout(false);
 
@@ -106,13 +106,6 @@ namespace test3v11 {
 				 this->Refresh();
 				 lines.Clear();
 				 unit (T);
-				 /*mat R, T1;
-				 mirror(true, R);
-				 times(R, T, T1);
-				 set(T1, T);
-				 move(0, HEIGHT, R);	
-				 times(R, T, T1);
-				 set(T1, T);*/
 			 }
 	private: System::Void Form1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
 				 Graphics^ g = e->Graphics;
@@ -172,11 +165,12 @@ namespace test3v11 {
 								 getline(in, str);
 							 }
 						 }
-						 unit(T);
+						 //unit(T);
 						 mat R, T1;
-						 mirror(true, R);
-						 times(R, T, T1);
-						 set(T1, T);
+						 mirror(true, T);
+						 //times(R, T, T1);
+						 //set(T1, T);
+
 						 move(0, HEIGHT, R);	
 						 times(R, T, T1);
 						 set(T1, T);
@@ -226,12 +220,14 @@ namespace test3v11 {
 						mirror(false, R);
 						times(R, T, T1);
 						set(T1, T);
+
 						move(WIDTH, 0, R);	
 						break;
 					case Keys::J : // 4
 						mirror(true, R);
 						times(R, T, T1);
 						set(T1, T);
+
 						move(0, HEIGHT, R);	
 						break;
 					case Keys::R : // 5
@@ -332,10 +328,13 @@ namespace test3v11 {
 					default :
 						unit(R);
 				 }
-				 times(R,T,T1);
+				 times(R, T, T1);
 				 set(T1, T);
 				 this->Refresh();
 			 }
-	};
+	private: System::Void Form1_Resize(System::Object^  sender, System::EventArgs^  e) {
+				 this->Refresh();
+			 }
+};
 }
 
