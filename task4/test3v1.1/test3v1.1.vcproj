@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Clip.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -233,6 +237,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\Clip.h"
+				>
+			</File>
 			<File
 				RelativePath=".\Form1.h"
 				FileType="3"
@@ -271,6 +279,10 @@
 			</File>
 			<File
 				RelativePath=".\output.txt"
+				>
+			</File>
+			<File
+				RelativePath=".\output2.txt"
 				>
 			</File>
 			<File

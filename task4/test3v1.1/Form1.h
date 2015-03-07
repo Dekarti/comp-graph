@@ -53,9 +53,10 @@ namespace test3v11 {
 	private: System::Windows::Forms::Button^  btnOpen;
 
 	private: System::Collections::Generic::List<line> lines;
-	private: float left, right, top, bottom;
-			 float Wcx, Wcy, Wx, Wy;
-			 float Vcx, Vcy, Vx, Vy;
+	private: float left, right, top, bottom,
+			       Wcx, Wcy, Wx, Wy,
+				   Vcx, Vcy, Vx, Vy;
+			 bool drawNames;
 
 #pragma region Windows Form Designer generated code
 			 /// <summary>
@@ -79,7 +80,7 @@ namespace test3v11 {
 				 // btnOpen
 				 // 
 				 this->btnOpen->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
-				 this->btnOpen->Location = System::Drawing::Point(683, 12);
+				 this->btnOpen->Location = System::Drawing::Point(860, 12);
 				 this->btnOpen->Name = L"btnOpen";
 				 this->btnOpen->Size = System::Drawing::Size(75, 23);
 				 this->btnOpen->TabIndex = 0;
@@ -91,10 +92,11 @@ namespace test3v11 {
 				 // 
 				 this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 				 this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-				 this->ClientSize = System::Drawing::Size(807, 543);
+				 this->ClientSize = System::Drawing::Size(984, 661);
 				 this->Controls->Add(this->btnOpen);
 				 this->DoubleBuffered = true;
 				 this->KeyPreview = true;
+				 this->MinimumSize = System::Drawing::Size(500, 350);
 				 this->Name = L"Form1";
 				 this->Text = L"Form1";
 				 this->Load += gcnew System::EventHandler(this, &Form1::Form1_Load);
@@ -108,8 +110,8 @@ namespace test3v11 {
 #pragma endregion
 	private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {
 				 this->Refresh();
-
-				 left = right = top = bottom = 50;
+				 drawNames = false;
+				 left = right = top = bottom = 60;
 
 				 Wcx = left;
 				 Wcy = HEIGHT - bottom;
@@ -123,9 +125,13 @@ namespace test3v11 {
 				 Graphics^ g = e->Graphics;
 				 g->Clear(Color::White);
 				 Pen^ blackPen = gcnew Pen(Color::Black);
+				 blackPen->Width = 2;
+
 				 Pen^ rectPen = gcnew Pen(Color::Black);
 				 rectPen->Width = 4;
 				 
+				 System::Drawing::Font^ font = gcnew System::Drawing::Font("Arial", 8);
+				 SolidBrush^ brush = gcnew SolidBrush(Color::Black);
 
 				 for (int i = 0; i < lines.Count; i++) {
 					 vec A, B;
@@ -141,11 +147,16 @@ namespace test3v11 {
 					 vec2point(B1, b);
 
 					 g->DrawLine(blackPen, a.x, a.y, b.x, b.y);
+					 if (drawNames)
+						 g->DrawString(lines[i].name,
+									   font,
+									   brush,
+									   (a.x + b.x) / 2,
+									   (a.y + b.y) / 2);
+
 
 				 }
 				 g->DrawRectangle(rectPen, left, top, Wx, Wy);
-				 //g->DrawLine(rectPen, WIDTH / 2, 0, WIDTH / 2, HEIGHT);
-				 //g->DrawLine(blackPen, 0, HEIGHT / 2, WIDTH, HEIGHT / 2);
 
 			 }
 	private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
@@ -345,6 +356,9 @@ namespace test3v11 {
 						set(T1, T);
 						move(0, HEIGHT, R);	
 						break;
+					case Keys::P :
+						unit(R);
+						drawNames ^= 1;
 					default :
 						unit(R);
 				 }
@@ -353,9 +367,28 @@ namespace test3v11 {
 				 this->Refresh();
 			 }
 	private: System::Void Form1_Resize(System::Object^  sender, System::EventArgs^  e) {
+				 float oldWx = Wx,
+					   oldWy = Wy;
+
+
 				 Wcy = HEIGHT - bottom;
 				 Wx = WIDTH - left - right;
 				 Wy = HEIGHT - top - bottom;
+
+				 mat R, T1;
+
+				 move(-Wcx, -top, R);
+				 times(R, T, T1);
+				 set(T1, T);
+
+				 stretch(Wx / oldWx, Wy / oldWy, R);
+				 times(R, T, T1);
+				 set(T1, T);
+
+				 move(Wcx, top, R);
+				 times(R, T, T1);
+				 set(T1, T);
+
 				 this->Refresh();
 			 }
 };
