@@ -1,5 +1,7 @@
-#include <string>
 #pragma once
+
+#include <string>
+#include "Clip.h"
 #define HEIGHT this->ClientRectangle.Height
 #define WIDTH this->ClientRectangle.Width
 
@@ -133,6 +135,13 @@ namespace test3v11 {
 				 System::Drawing::Font^ font = gcnew System::Drawing::Font("Arial", 8);
 				 SolidBrush^ brush = gcnew SolidBrush(Color::Black);
 
+				 point Pmax, Pmin;
+				 Pmax.x = WIDTH  - right;
+				 Pmin.x = left;
+
+				 Pmax.y = HEIGHT - bottom;
+				 Pmin.y = top;
+
 				 for (int i = 0; i < lines.Count; i++) {
 					 vec A, B;
 					 point2vec(lines[i].start, A);
@@ -145,15 +154,17 @@ namespace test3v11 {
 					 point a, b;
 					 vec2point(A1, a);
 					 vec2point(B1, b);
-
-					 g->DrawLine(blackPen, a.x, a.y, b.x, b.y);
-					 if (drawNames)
-						 g->DrawString(lines[i].name,
-									   font,
-									   brush,
-									   (a.x + b.x) / 2,
-									   (a.y + b.y) / 2);
-
+					 
+					 if (clip(a, b, Pmin, Pmax)) {
+						 g->DrawLine(blackPen, a.x, a.y, b.x, b.y);
+						 if (drawNames)
+							 g->DrawString(lines[i].name,
+										   font,
+										   brush,
+										   (a.x + b.x) / 2,
+										   (a.y + b.y) / 2);
+					 }
+						
 
 				 }
 				 g->DrawRectangle(rectPen, left, top, Wx, Wy);

@@ -289,6 +289,10 @@
 				RelativePath=".\test.txt"
 				>
 			</File>
+			<File
+				RelativePath=".\test3.txt"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"

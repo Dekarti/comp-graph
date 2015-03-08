@@ -1,3 +1,4 @@
+#pragma once
 #define M 3
 
 value struct point {
