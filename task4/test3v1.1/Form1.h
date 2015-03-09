@@ -127,7 +127,7 @@ namespace test3v11 {
 				 Graphics^ g = e->Graphics;
 				 g->Clear(Color::White);
 				 Pen^ blackPen = gcnew Pen(Color::Black);
-				 blackPen->Width = 2;
+				 blackPen->Width = 1;
 
 				 Pen^ rectPen = gcnew Pen(Color::Black);
 				 rectPen->Width = 4;
@@ -154,11 +154,11 @@ namespace test3v11 {
 					 point a, b;
 					 vec2point(A1, a);
 					 vec2point(B1, b);
-					 
+					 System::String^ linename = lines[i].name;
 					 if (clip(a, b, Pmin, Pmax)) {
 						 g->DrawLine(blackPen, a.x, a.y, b.x, b.y);
 						 if (drawNames)
-							 g->DrawString(lines[i].name,
+							 g->DrawString(linename,
 										   font,
 										   brush,
 										   (a.x + b.x) / 2,
@@ -362,10 +362,8 @@ namespace test3v11 {
 						break;
 					case Keys::Escape : // 8
 						unit(T);
-						mirror(true, R);
-						times(R, T, T1);
-						set(T1, T);
-						move(0, HEIGHT, R);	
+						unit(R);
+						frame(Vx, Vy, Vcx, Vcy, Wx, Wy, Wcx, Wcy, T);
 						break;
 					case Keys::P :
 						unit(R);
