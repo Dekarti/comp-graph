@@ -58,7 +58,8 @@ namespace test3v11 {
 			       Wcx, Wcy, Wx, Wy,
 				   Vcx, Vcy, Vx, Vy,
 				   x  , xp , y , yp, ypp,
-				   X  , Y;
+				   X  , Y,
+				   oVcx, oVcy, oVx, oVy;
 	private: point Pmax, Pmin;
 	private: int L, K;
 
@@ -98,7 +99,7 @@ namespace test3v11 {
 				 Wy = HEIGHT - top - bottom;
 
 				 Vcx = Vcy = 0;
-				 Vx = Vy = 50;
+				 Vx = Vy = 10;
 
 				 xp = Wcx;
 				 x = Vcx;
@@ -109,20 +110,26 @@ namespace test3v11 {
 				 Pmin.x = left;
 				 Pmin.y = top;
 
+				 oVx = Vx;
+				 oVy = Vy;
+				 oVcx = Vcx;
+				 oVcy = Vcy;
+
 				 L = 15;
 				 K = 10;
+
 			 }
 	private: System::Void Form1_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
 				 Graphics^ g = e->Graphics;
 				 g->Clear(Color::White);
 				 Pen^ blackPen = gcnew Pen(Color::BlueViolet);
-				 blackPen->Width = 2;
+				 blackPen->Width = 1;
 
 				 Pen^ linesPen = gcnew Pen(Color::Gray);
 				 blackPen->Width = 1;
 
 				 Pen^ rectPen = gcnew Pen(Color::Black);
-				 rectPen->Width = 1;
+				 rectPen->Width = 2;
 				 
 				 System::Drawing::Font^ font = gcnew System::Drawing::Font("Arial", 8);
 				 SolidBrush^ brush = gcnew SolidBrush(Color::Black);
@@ -130,6 +137,8 @@ namespace test3v11 {
 				 bool visible1 = false,
 					  visible2 = false;
 
+				 xp = Wcx;
+				 x = Vcx;
 				 if (fexists(x)) {
 					visible1 = true;
 					y = f(x);
@@ -149,34 +158,36 @@ namespace test3v11 {
 					else {
 						visible2 = false;
 					}
-
-					if (visible1 && visible2 && clip(xp, yp, xp + 1, ypp, Pmin, Pmax)) {
-						g->DrawLine(blackPen, xp, yp, xp + 1, ypp);
+					point a = {xp, yp};
+					point b = {xp + 1, ypp};
+					if (visible1 && visible2 && clip(a, b, Pmin, Pmax)) {
+						g->DrawLine(blackPen, a.x, a.y, b.x, b.y);
 					}
 					xp++;
 					yp = ypp;
 					visible1 = visible2;
-					
-					float numb1 = Wx / K;
-					for (float xs = Wcx + numb1; xs < Wx + left; xs += numb1) {
-						X = ceil(((xs - Wcx) / Wx) * Vx + Vcx);
-						g->DrawLine(linesPen, xs, top, xs, HEIGHT - bottom);
-						g->DrawString(Convert::ToString(X), font, brush, xs, Wcy);
-					}
+										}
 
-					float numb2 = Wy / L;
-					for (float ys = top + numb2; ys < Wcy; ys += numb2) {
-						Y = ceil(Vcy - ((ys - Wcy) / Wy) * Vy);
-						g->DrawLine(linesPen, left, ys, WIDTH - right, ys);
-						g->DrawString(Convert::ToString(Y), font, brush, Wx + Wcx, ys);
-					}
+				float numb1 = Wx / K;
+				for (float xs = Wcx + numb1; xs < Wx + left; xs += numb1) {
+					X = roundTo(((xs - Wcx) / Wx) * Vx + Vcx);
+					g->DrawLine(linesPen, xs, top, xs, HEIGHT - bottom);
+					g->DrawString(Convert::ToString(X), font, brush, xs, Wcy);
 				}
 
-				 g->DrawRectangle(rectPen, left, top, Wx, Wy);
+				float numb2 = Wy / L;
+				for (float ys = top + numb2; ys < Wcy; ys += numb2) {
+					Y = ceil(Vcy - ((ys - Wcy) / Wy) * Vy);
+					g->DrawLine(linesPen, left, ys, WIDTH - right, ys);
+					g->DrawString(Convert::ToString(Y), font, brush, Wx + Wcx, ys);
+				}
+
+				g->DrawRectangle(rectPen, left, top, Wx, Wy);
 
 			 }
 
 	private: System::Void Form1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+				 float tmp;
 				 switch(e->KeyCode){
 					case Keys::W :
 						Vcy -= (Vy / Wy);
@@ -200,53 +211,52 @@ namespace test3v11 {
 						Vcx += 15 * (Vx / Wx);
 						break;
 					case Keys::H :
-						Vcx -= -15 * (Vx / Wx);
+						Vcx -= 15 * (Vx / Wx);
 						break;
-					/*case Keys::Q :
+					case Keys::Q :
 						K++;
 						break;
 					case Keys::E :
-						if (K > 1) K--;
+						if (K != 1)
+							K--;
 						break;
 					case Keys::Z :
 						L++;
 						break;
 					case Keys::C :
-						if (L > 1) L--;
+						if (L != 1)
+							L--;
 						break;
-					case Keys::L :
-						temp = Vx;
+					case Keys:: I :
+						tmp = Vx;
 						Vx *= 1.1;
-						Vcx += (temp - Vx) / 2;
+						Vcx += (tmp - Vx) / 2;
 						break;
-					case Keys::K :
-						temp = Vx;
+					case Keys:: O :
+						tmp = Vx;
 						Vx *= 1 / 1.1;
-						Vcx += (temp - Vx) / 2;
+						Vcx += (tmp - Vx) / 2;
 						break;
-					case Keys::O :
-						temp = Vy;
+					case Keys:: K :
+						tmp = Vy;
 						Vy *= 1.1;
-						Vcy += (temp - Vy) / 2;
+						Vcy += (tmp - Vy) / 2;
 						break;
-					case Keys::I :
-						temp = Vy;
+					case Keys:: L :
+						tmp = Vy;
 						Vy *= 1 / 1.1;
-						Vcy += (temp - Vy) / 2;
+						Vcy += (tmp - Vy) / 2;
 						break;
 					case Keys::Escape :
-						Vx = Vx_;
-						Vy = Vy_;
-						Vcx = Vcx_;
-						Vcy = Vcy_;
-						break;*/
+						Vx = oVx;
+						Vy = oVy;
+						Vcx = oVcx;
+						Vcy = oVcy;
+						break;
 				 }
 				 this->Refresh();
 			 }
 	private: System::Void Form1_Resize(System::Object^  sender, System::EventArgs^  e) {
-				 float oldWx = Wx,
-					   oldWy = Wy;
-
 
 				 Wcy = HEIGHT - bottom;
 				 Wx = WIDTH - left - right;
