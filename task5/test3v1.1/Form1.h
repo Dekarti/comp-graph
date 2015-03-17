@@ -166,18 +166,18 @@ namespace test3v11 {
 					xp++;
 					yp = ypp;
 					visible1 = visible2;
-										}
+				}
 
 				float numb1 = Wx / K;
 				for (float xs = Wcx + numb1; xs < Wx + left; xs += numb1) {
-					X = roundTo(((xs - Wcx) / Wx) * Vx + Vcx);
+					X = roundTo(((xs - Wcx) / Wx) * Vx + Vcx, 2);
 					g->DrawLine(linesPen, xs, top, xs, HEIGHT - bottom);
 					g->DrawString(Convert::ToString(X), font, brush, xs, Wcy);
 				}
 
 				float numb2 = Wy / L;
 				for (float ys = top + numb2; ys < Wcy; ys += numb2) {
-					Y = ceil(Vcy - ((ys - Wcy) / Wy) * Vy);
+					Y = roundTo(Vcy - ((ys - Wcy) / Wy) * Vy, 2);
 					g->DrawLine(linesPen, left, ys, WIDTH - right, ys);
 					g->DrawString(Convert::ToString(Y), font, brush, Wx + Wcx, ys);
 				}
