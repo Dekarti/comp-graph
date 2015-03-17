@@ -8,61 +8,62 @@
 #include <algorithm>
 #include "Clip.h"
 
-#define ARGS_DEF	point &A, point &B, point Pmin, point Pmax
-#define ARGS		A, B, Pmin, Pmax
+#define ARGS_DEF	float x1, float y1, float x2, float y2, point Pmin, point Pmax
+#define ARGS		x1, y1, x2, y2, Pmin, Pmax
 
 void clip1Left	(ARGS_DEF) {
-	A.y = B.y - (B.x - Pmin.x) * (B.y - A.y) / (B.x - A.x);
-	A.x = Pmin.x;
+	y1 = y2 - (x2 - Pmin.x) * (y2 - y1) / (x2 - x1);
+	x1 = Pmin.x;
 }
 void clip1Top	(ARGS_DEF) {
-	A.x = B.x - (B.y - Pmax.y) * (B.x - A.x) / (B.y - A.y);
-	A.y = Pmax.y;
+	x1 = x2 - (y2 - Pmax.y) * (x2 - x1) / (y2 - y1);
+	y1 = Pmax.y;
 }
 void clip1Bottom(ARGS_DEF) {
-	A.x = B.x - (B.y - Pmin.y) * (B.x - A.x) / (B.y - A.y);
-	A.y = Pmin.y;
+	x1 = x2 - (y2 - Pmin.y) * (x2 - x1) / (y2 - y1);
+	y1 = Pmin.y;
 }
 void clip2Right	(ARGS_DEF) {
-	B.y = A.y + (Pmax.x - A.x) * (B.y - A.y) / (B.x - A.x);
-	B.x = Pmax.x;
+	y2 = y1 + (Pmax.x - x1) * (y2 - y1) / (x2 - x1);
+	x2 = Pmax.x;
 }
 void clip2Top	(ARGS_DEF) {
-	B.x = A.x + (Pmax.y - A.y) * (B.x - A.x) / (B.y - A.y);
-	B.y = Pmax.y;
+	x2 = x1 + (Pmax.y - y1) * (x2 - x1) / (y2 - y1);
+	y2 = Pmax.y;
 }
 void clip2Bottom(ARGS_DEF) {
-	B.x = A.x + (Pmin.y - A.y) * (B.x - A.x) / (B.y - A.y);
-	B.y = Pmin.y;
+	x2 = x1 + (Pmin.y - y1) * (x2 - x1) / (y2 - y1);
+	y2 = Pmin.y;
 }
 
 
 bool clip(ARGS_DEF) {
 	std::ofstream out("test3.txt");
 	// 1 
-	if (A.x > B.x) 
-		std::swap(A, B);
-
+	if (x1 > x2) {
+		std::swap(x1, x2);
+		std::swap(y1, y2);
+	}
 	// 2
 	int C1 = 0;
 	int C2 = 0;
 
-	if (A.x < Pmin.x) 
+	if (x1 < Pmin.x) 
 		C1 += 1;
-	if (A.x > Pmax.x)
+	if (x1 > Pmax.x)
 		C1 += 2;
-	if (A.y < Pmin.y)
+	if (y1 < Pmin.y)
 		C1 += 4;
-	if (A.y > Pmax.y)
+	if (y1 > Pmax.y)
 		C1 += 8;
 
-	if (B.x < Pmin.x) 
+	if (x2 < Pmin.x) 
 		C2 += 1;
-	if (B.x > Pmax.x)
+	if (x2 > Pmax.x)
 		C2 += 2;
-	if (B.y < Pmin.y)
+	if (y2 < Pmin.y)
 		C2 += 4;
-	if (B.y > Pmax.y)
+	if (y2 > Pmax.y)
 		C2 += 8;
 
 	// 3
@@ -84,7 +85,7 @@ bool clip(ARGS_DEF) {
 			return true;
 		case 0x06 :
 			clip2Right(ARGS);
-			if (B.y < Pmin.y)
+			if (y2 < Pmin.y)
 				clip2Bottom(ARGS);
 			return true;
 		case 0x08 :
@@ -92,7 +93,7 @@ bool clip(ARGS_DEF) {
 			return true;
 		case 0x0A :
 			clip2Right(ARGS);
-			if (B.y > Pmax.y)
+			if (y2 > Pmax.y)
 				clip2Top(ARGS);
 			return true;
 		case 0x10 :
@@ -104,30 +105,30 @@ bool clip(ARGS_DEF) {
 			return true;
 		case 0x14 :
 			clip1Left(ARGS);
-			if (A.y < Pmin.y) 
+			if (y1 < Pmin.y) 
 				return false;
 			clip2Bottom(ARGS);
 			return true;
 		case 0x16 :
 			clip1Left(ARGS);
-			if (A.y < Pmin.y)
+			if (y1 < Pmin.y)
 				return false;
 			clip2Bottom(ARGS);
-			if (B.x > Pmax.x)
+			if (x2 > Pmax.x)
 				clip2Right(ARGS);
 			return true;
 		case 0x18 :
 			clip1Left(ARGS);
-			if (A.y > Pmax.y)
+			if (y1 > Pmax.y)
 				return false;
 			clip2Top(ARGS);
 			return true;
 		case 0x1A :
 			clip1Left(ARGS);
-			if (A.y > Pmax.y)
+			if (y1 > Pmax.y)
 				return false;
 			clip2Top(ARGS);
-			if (B.x > Pmax.x)
+			if (x2 > Pmax.x)
 				clip2Right(ARGS);
 			return true;
 		case 0x40 :
@@ -135,7 +136,7 @@ bool clip(ARGS_DEF) {
 			return true;
 		case 0x42 :
 			clip1Bottom(ARGS);
-			if (A.x > Pmax.x)
+			if (x1 > Pmax.x)
 				return false;
 			clip2Right(ARGS);
 			return true;
@@ -145,44 +146,44 @@ bool clip(ARGS_DEF) {
 			return true;
 		case 0x4A :
 			clip1Bottom(ARGS);
-			if (A.x > Pmax.x) 
+			if (x1 > Pmax.x) 
 				return false;
 			clip2Right(ARGS);
-			if (B.y > Pmax.y)
+			if (y2 > Pmax.y)
 				clip2Top(ARGS);
 			return true;
 		case 0x50 :
 			clip1Left(ARGS);
-			if (A.y < Pmin.y)
+			if (y1 < Pmin.y)
 				clip1Bottom(ARGS);
 			return true;
 		case 0x52 :
 			clip1Bottom(ARGS);
-			if (A.x  > Pmax.x) 
+			if (x1  > Pmax.x) 
 				return false;
-			if (A.x < Pmin.x)
+			if (x1 < Pmin.x)
 				clip1Left(ARGS);
 			clip2Right(ARGS);
 			return true;
 		case 0x58 :
 			clip1Left(ARGS);
-			if (A.y > Pmax.y) 
+			if (y1 > Pmax.y) 
 				return false;
-			if (A.y < Pmin.y)
+			if (y1 < Pmin.y)
 				clip1Bottom(ARGS);
 			clip2Top(ARGS);
 			return true;
 		case 0x5A :
 			clip1Left(ARGS);
-			if (A.y > Pmax.y) 
+			if (y1 > Pmax.y) 
 				return false;
-			if (A.y < Pmin.y) {
+			if (y1 < Pmin.y) {
 				clip1Bottom(ARGS);
-				if (A.x > Pmax.x)
+				if (x1 > Pmax.x)
 					return false;
 			}
 			clip2Top(ARGS);
-			if (B.x > Pmax.x)
+			if (x2 > Pmax.x)
 				clip2Right(ARGS);
 			return true;
 		case 0x80 :
@@ -190,7 +191,7 @@ bool clip(ARGS_DEF) {
 			return true;
 		case 0x82 :
 			clip1Top(ARGS);
-			if (A.x > Pmax.x) 
+			if (x1 > Pmax.x) 
 				return false;
 			clip2Right(ARGS);
 			return true;
@@ -200,44 +201,44 @@ bool clip(ARGS_DEF) {
 			return true;
 		case 0x86 :
 			clip1Top(ARGS);
-			if (A.x > Pmax.x) 
+			if (x1 > Pmax.x) 
 				return false;
 			clip2Right(ARGS);
-			if (B.y < Pmin.y)
+			if (y2 < Pmin.y)
 				clip2Bottom(ARGS);
 			return true;
 		case 0x90 :
 			clip1Left(ARGS);
-			if (A.y > Pmax.y)
+			if (y1 > Pmax.y)
 				clip1Top(ARGS);
 			return true;
 		case 0x92 :
 			clip1Top(ARGS);
-			if (A.x > Pmax.x) 
+			if (x1 > Pmax.x) 
 				return false;
-			if (A.x < Pmin.x)
+			if (x1 < Pmin.x)
 				clip1Left(ARGS);
 			clip2Right(ARGS);
 			return true;
 		case 0x94 :
 			clip1Left(ARGS);
-			if (A.y < Pmin.y) 
+			if (y1 < Pmin.y) 
 				return false;
-			if (A.y > Pmax.y)
+			if (y1 > Pmax.y)
 				clip1Top(ARGS);
 			clip2Bottom(ARGS);
 			return true;
 		case 0x96 :
 			clip1Left(ARGS);
-			if (A.y < Pmin.y) 
+			if (y1 < Pmin.y) 
 				return false;
-			if (A.y > Pmax.y) {
+			if (y1 > Pmax.y) {
 				clip1Top(ARGS);
-				if (A.x > Pmax.x) 
+				if (x1 > Pmax.x) 
 					return false;
 			}
 			clip2Bottom(ARGS);
-			if (B.x > Pmax.x)
+			if (x2 > Pmax.x)
 				clip2Right(ARGS);	
 			return true;
 	}

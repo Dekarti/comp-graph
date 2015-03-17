@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include "Transform.h"
+#include "Function.h"
 #include "Form1.h"
 
 using namespace test3v11;

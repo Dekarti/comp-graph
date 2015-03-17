@@ -252,6 +252,10 @@
 				</File>
 			</File>
 			<File
+				RelativePath=".\Function.h"
+				>
+			</File>
+			<File
 				RelativePath=".\resource.h"
 				>
 			</File>
