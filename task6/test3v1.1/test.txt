@@ -1,0 +1,10 @@
+Vx = 500
+Vy = 500
+Vcx = 0
+Vcy = 0
+Wx = 864
+Wy = 541
+Wcx = 60
+Wcy = 601
+Wx / Vx = 1.728
+Wy / Vy = 1.082
