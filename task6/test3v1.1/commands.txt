@@ -1,0 +1,119 @@
+﻿# кадр - все представленное изображение
+frame 0 0 800 400
+pushTransform
+translate 40 200
+
+rotate 90
+figure
+
+rotate -90
+translate 0 80
+rotate 180
+figure
+
+rotate 180
+translate 0 80
+figure
+
+#-----------------------------
+
+popTransform
+pushTransform
+translate 120 180
+
+rotate 60
+figure
+
+rotate -90
+translate 0 80
+rotate 180
+figure
+
+rotate 180
+translate 0 80
+figure
+
+#-----------------------------
+
+popTransform
+pushTransform
+translate 180 120
+
+rotate 30
+figure
+
+rotate -90
+translate 0 80
+rotate 180
+figure
+
+rotate 180
+translate 0 80
+figure
+#-----------------------------
+
+popTransform
+pushTransform
+translate 380 240
+
+rotate 30
+figure
+
+rotate -90
+translate 0 80
+rotate 180
+figure
+
+rotate 180
+translate 0 80
+figure
+#-----------------------------
+popTransform
+pushTransform
+translate 580 360
+
+rotate 30
+figure
+#-----------------------------
+
+popTransform
+pushTransform
+translate 200 40
+
+rotate 0
+figure
+
+rotate -90
+translate 0 80
+rotate 180
+figure
+
+rotate 180
+translate 0 80
+figure
+#-----------------------------
+
+popTransform
+pushTransform
+translate 440 40
+
+rotate 0
+figure
+
+rotate -90
+translate 0 80
+rotate 180
+figure
+
+rotate 180
+translate 0 80
+figure
+#-----------------------------
+popTransform
+pushTransform
+translate 680 40
+
+rotate 0
+figure
+#-----------------------------
+

@@ -200,10 +200,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Clip.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -238,10 +234,6 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Clip.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Form1.h"
 				FileType="3"
 				>
@@ -275,6 +267,10 @@
 			</File>
 			<File
 				RelativePath=".\app.rc"
+				>
+			</File>
+			<File
+				RelativePath=".\commands.txt"
 				>
 			</File>
 			<File

@@ -3,6 +3,9 @@
 #include "stdafx.h"
 #include <fstream>
 #include <sstream>
+#include <array>
+#include <vector>
+#include <stack>
 #include "Transform.h"
 #include "Form1.h"
 
