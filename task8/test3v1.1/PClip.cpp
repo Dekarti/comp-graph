@@ -10,6 +10,7 @@
 #define INFINITY float::MaxValue
 
 using namespace std;
+using namespace System;
 using namespace System::Collections;
 using namespace System::Collections::Generic;
 
@@ -122,110 +123,14 @@ polygon^ Pclip (polygon^ P, point Pmin, point Pmax) {
 	return P1;
 }
 
-/*void Pfill (polygon^ P, System::Drawing::Bitmap^ image, System::Drawing::Color C) {
 
-	Generic::List<line> S;
-	Generic::List<ternary> AEL;
-	point A = P[P->Count - 1];
-	int k = 0;
-	while (k < P->Count) {
-		point B = P[k];
-		if (A.y <= B.y) {
-			line l = {A, B};
-			S.Add(l);
-		}
-		else {
-			line l = {B, A};
-			S.Add(l);
-		}
-		k++;
-		A = B;
-	}
-	
-	for(int i = 0; i < S.Count; i++)
-		for(int j = i + 1; j < S.Count; j++)
-			if(S[j].start.y < S[i].start.y)
-				swap(S[i], S[j]);
-
-	float ymin = S[0].start.y;
-	float ymax = S[S.Count - 1].end.y;
-
-	float yt = ymin;
-	float ysnext = ymin;
-	float yAELnext;
-	while (yt <= ymax) {
-		if (yt == ysnext) {
-			for (int i = 0; i < S.Count; i++) {
-				if (S[i].start.y == yt && S[i].start.y != S[i].end.y) {
-					float dx = (S[i].end.x - S[i].start.x) / (S[i].end.y - S[i].start.y);
-					ternary t = { S[i].start.x, S[i].end.y, dx };
-					AEL.Add(t);
-				}
-				if (S[i].start.y == yt && S[i].start.y == S[i].end.y) {
-					for (int x = S[i].start.x; x <= S[i].end.x; x++)
-						image->SetPixel(x, yt, C);
-				}
-			}
-			if(!AEL.Count) return;
-
-			for (int i = S.Count - 1; i >=0; i--) {
-				if (S[i].start.y == yt) {
-					S.RemoveAt(i);
-				}
-			}
-
-			for (int i = 0; i < S.Count; i++) {
-				if (S[i].start.y <= ysnext)
-					ysnext = S[i].start.y;
-			}
-
-			for (int i = 0; i < AEL.Count; i++) {
-				for (int j = i + 1; j < AEL.Count; j++) {
-					if (AEL[j].x1 < AEL[i].x1)
-						swap(AEL[i], AEL[j]);
-					else if (AEL[j].x1 == AEL[i].x1)
-						if (AEL[j].dx < AEL[i].dx)
-							swap(AEL[i], AEL[j]);
-				}
-			}
-			
-			yAELnext = AEL[0].y2;
-			for (int i = 0; i < AEL.Count; i++) {
-				if (AEL[i].y2 != yt && AEL[i].y2 <= yAELnext)
-					yAELnext = AEL[i].y2;
-			}
-		}
-
-		for (int i = 0; i < AEL.Count - 1; i += 2) {
-			for (int x = AEL[i].x1; x <= AEL[i + 1].x1; x++)
-				image->SetPixel(x, yt, C);
-		}
-
-		for (int i = 0; i < AEL.Count; i++) {
-			AEL[i].x1 = AEL[i].x1 * AEL[i].dx;
-		}
-
-		yt++;
-
-		if (yt >= yAELnext) {
-			for (int i = AEL.Count - 1; i >=0; i--) {
-				if (AEL[i].y2 <= yt) {
-					AEL.RemoveAt(i);
-				}
-			}
-
-			for (int i = 0; i < AEL.Count; i++) {
-				if (AEL[i].y2 != yt && AEL[i].y2 <= yAELnext)
-					yAELnext = AEL[i].y2;
-			}
-		}
-	}
-
-}*/
+int compareByStartY(line l1, line l2) {
+	return l1.start.y - l2.start.y;
+}
 
 void PFill (polygon^ P, System::Drawing::Bitmap^ image, System::Drawing::Color C) {
 	List<line> S;
-	List<ternary> AEL;
+	List<ternary^> AEL;
 
 	point A = P[P->Count - 1];
 	int k = 0;
@@ -242,11 +147,8 @@ void PFill (polygon^ P, System::Drawing::Bitmap^ image, System::Drawing::Color C
 		k++;
 		A = B;
 	}
-	
-	for(int i = 0; i < S.Count; i++)
-		for(int j = i + 1; j < S.Count; j++)
-			if(S[j].start.y < S[i].start.y)
-				swap(S[i], S[j]);
+
+	S.Sort(gcnew Comparison<line>(compareByStartY));
 
 	float ymin = S[0].start.y;
 
@@ -261,49 +163,51 @@ void PFill (polygon^ P, System::Drawing::Bitmap^ image, System::Drawing::Color C
 		for (int i = 0; i < S.Count; i++) {
 			if (S[i].start.y == yt && S[i].start.y != S[i].end.y) {
 				float dx = (float)(S[i].end.x - S[i].start.x) / (float)(S[i].end.y - S[i].start.y);
-				ternary t = { S[i].start.x, S[i].end.y, dx };
+				ternary^ t = { S[i].start.x, S[i].end.y, dx };
 				AEL.Add(t);
 			}
 			if (S[i].start.y == yt && S[i].start.y == S[i].end.y) {
 				for (int x = S[i].start.x; x <= S[i].end.x; x++)
-					image->SetPixel(x, yt, System::Drawing::Color::Blue);
+					image->SetPixel(x, yt, C);
 			}
 		}
 		if (!AEL.Count) return;
 		float yNext = int::MaxValue;
 		for (int i = 0; i < AEL.Count; i++) {
-			if (yNext != yt && yNext > AEL[i].y2)
-				yNext = AEL[i].y2;
+			if (yNext != yt && yNext > AEL[i][1])
+				yNext = AEL[i][1];
 		}
 		
-		for (int i = 0; i < AEL.Count; i++) {
-			for (int j = i + 1; j < AEL.Count; j++) {
-				if (AEL[j].x1 < AEL[i].x1)
-					swap(AEL[i], AEL[j]);
+		for (int i = AEL.Count - 1; i >= 0; i--) {
+			for (int j = 0; j < i; j++) {
+				if (AEL[j][0] - AEL[j + 1][0] > 0) {
+					ternary^ t = AEL[i];
+					AEL[i] = AEL[j];
+					AEL[j] = t;
+				}
+				if (AEL[j][0] == AEL[j + 1][0] && AEL[j][2] > AEL[j + 1][2]) {
+					ternary^ t = AEL[i];
+					AEL[i] = AEL[j];
+					AEL[j] = t;
+				}
 			}
 		}
 
-		for (int i = 0; i < AEL.Count; i++) {
-			for (int j = i + 1; j < AEL.Count; j++) {
-				if (AEL[j].x1 == AEL[i].x1 && AEL[j].dx < AEL[i].dx)
-					swap(AEL[i], AEL[j]);
-			}
-		}
 
 		while (yt < yNext) {
 			for (int i = 0; i < AEL.Count - 1; i += 2) {
-				for (float x = AEL[i].x1; x <= AEL[i + 1].x1; x += 1.0) {
-					image->SetPixel(x, yt, System::Drawing::Color::Blue);
+ 				for (float x = AEL[i][0]; x <= AEL[i + 1][0]; x += 1.0) {
+					image->SetPixel(x, yt, C);
 					
 				}
-				AEL[i].x1 = AEL[i].x1 + AEL[i].dx;
-				AEL[i + 1].x1 = AEL[i + 1].x1 + AEL[i + 1].dx;
+				AEL[i][0] += AEL[i][2];
+				AEL[i + 1][0] += AEL[i + 1][2];
 			}
 			yt++;
 		}
 
 		for (int i = AEL.Count - 1; i >= 0; i--) {
-			if (AEL[i].y2 <= yt) {
+			if (AEL[i][1] <= yt) {
 				AEL.RemoveAt(i);
 			}
 		}

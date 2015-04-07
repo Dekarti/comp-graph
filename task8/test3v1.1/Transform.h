@@ -7,7 +7,7 @@
 
 typedef std::tr1::array<float, M> vec;
 typedef std::tr1::array<vec, M> mat;
-
+typedef array<float> ternary;
 
 extern mat T;
 extern std::vector<mat> matrices;
@@ -26,11 +26,6 @@ value struct line {
 	System::String^ name;
 };
 
-value struct ternary {
-	float x1;
-	float y2;
-	float dx;
-};
 
 void times(mat a, mat b, mat &c);
 void timesMatVec(mat a, vec b, vec &c);
