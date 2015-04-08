@@ -13,6 +13,7 @@ using namespace std;
 using namespace System;
 using namespace System::Collections;
 using namespace System::Collections::Generic;
+using namespace System::Drawing;
 
 polygon^ Pclip (polygon^ P, point Pmin, point Pmax) {
 	polygon^ P1 = gcnew polygon(0);
@@ -125,10 +126,13 @@ polygon^ Pclip (polygon^ P, point Pmin, point Pmax) {
 
 
 int compareByStartY(line l1, line l2) {
-	return l1.start.y - l2.start.y;
+	return (int)l1.start.y - l2.start.y;
 }
 
 void PFill (polygon^ P, System::Drawing::Bitmap^ image, System::Drawing::Color C) {
+
+	Graphics^ g = Graphics::FromImage(image);
+	Pen^ pen = gcnew Pen(C);
 	List<line> S;
 	List<ternary^> AEL;
 
@@ -158,25 +162,26 @@ void PFill (polygon^ P, System::Drawing::Bitmap^ image, System::Drawing::Color C
 			ymax = P[i].y;
 	}
 
-	float yt = ymin;
+	int yt = ymin;
 	while (yt <= ymax) {
 		for (int i = 0; i < S.Count; i++) {
-			if (S[i].start.y == yt && S[i].start.y != S[i].end.y) {
-				float dx = (float)(S[i].end.x - S[i].start.x) / (float)(S[i].end.y - S[i].start.y);
+			if ((int)S[i].start.y == yt &&
+				(int)S[i].start.y != (int)S[i].end.y) {
+				float dx = (S[i].end.x - S[i].start.x) / (float)(S[i].end.y - S[i].start.y);
 				ternary^ t = { S[i].start.x, S[i].end.y, dx };
 				AEL.Add(t);
 			}
-			if (S[i].start.y == yt && S[i].start.y == S[i].end.y) {
-				for (int x = S[i].start.x; x <= S[i].end.x; x++)
-					image->SetPixel(x, yt, C);
+			if (S[i].start.y == yt &&
+				(int)S[i].start.y == (int)S[i].end.y) {
+				g->DrawLine(pen, S[i].start.x, (float)yt, S[i].end.x, (float)yt);
 			}
+			if ((int)S[i].start.y == yt) {
+					S.RemoveAt(i);
+					i--;
+			}
+
 		}
 		if (!AEL.Count) return;
-		float yNext = int::MaxValue;
-		for (int i = 0; i < AEL.Count; i++) {
-			if (yNext != yt && yNext > AEL[i][1])
-				yNext = AEL[i][1];
-		}
 		
 		for (int i = AEL.Count - 1; i >= 0; i--) {
 			for (int j = 0; j < i; j++) {
@@ -193,21 +198,24 @@ void PFill (polygon^ P, System::Drawing::Bitmap^ image, System::Drawing::Color C
 			}
 		}
 
+		int yNext = AEL[0][1];
+		for (int i = 0; i < AEL.Count; i++)
+			if (yNext > (int)AEL[i][1])
+				yNext = AEL[i][1];
+		if (S.Count)
+			yNext = std::min((int)S[0].start.y, yNext);
 
 		while (yt < yNext) {
-			for (int i = 0; i < AEL.Count - 1; i += 2) {
- 				for (float x = AEL[i][0]; x <= AEL[i + 1][0]; x += 1.0) {
-					image->SetPixel(x, yt, C);
-					
-				}
+			for (int i = 0; i < AEL.Count; i += 2) {
+				g->DrawLine(pen, AEL[i][0], (float)yt, AEL[i+1][0], (float)yt);
 				AEL[i][0] += AEL[i][2];
-				AEL[i + 1][0] += AEL[i + 1][2];
+				AEL[i+1][0] += AEL[i+1][2];
 			}
 			yt++;
 		}
 
 		for (int i = AEL.Count - 1; i >= 0; i--) {
-			if (AEL[i][1] <= yt) {
+			if ((int)AEL[i][1] <= yt) {
 				AEL.RemoveAt(i);
 			}
 		}
