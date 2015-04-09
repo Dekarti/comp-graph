@@ -126,13 +126,16 @@ polygon^ Pclip (polygon^ P, point Pmin, point Pmax) {
 
 
 int compareByStartY(line l1, line l2) {
-	return (int)l1.start.y - l2.start.y;
+	if (l1.start.y == l2.start.y) return 0;
+	if (l1.start.y > l2.start.y)  return 1;
+	return -1;
 }
 
 void PFill (polygon^ P, System::Drawing::Bitmap^ image, System::Drawing::Color C) {
 
 	Graphics^ g = Graphics::FromImage(image);
 	Pen^ pen = gcnew Pen(C);
+
 	List<line> S;
 	List<ternary^> AEL;
 
@@ -154,69 +157,78 @@ void PFill (polygon^ P, System::Drawing::Bitmap^ image, System::Drawing::Color C
 
 	S.Sort(gcnew Comparison<line>(compareByStartY));
 
-	float ymin = S[0].start.y;
-
-	float ymax = ymin;
+	int ymin = S[0].start.y;
+	int ymax = ymin;
 	for (int i = 0; i < P->Count; i++) {
 		if (P[i].y > ymax)
-			ymax = P[i].y;
+			ymax = (int)P[i].y;
 	}
 
 	int yt = ymin;
+	int ySNext = ymin;
+	int yAELNext = float::MaxValue;
+
 	while (yt <= ymax) {
-		for (int i = 0; i < S.Count; i++) {
-			if ((int)S[i].start.y == yt &&
-				(int)S[i].start.y != (int)S[i].end.y) {
-				float dx = (S[i].end.x - S[i].start.x) / (float)(S[i].end.y - S[i].start.y);
-				ternary^ t = { S[i].start.x, S[i].end.y, dx };
-				AEL.Add(t);
-			}
-			if (S[i].start.y == yt &&
-				(int)S[i].start.y == (int)S[i].end.y) {
-				g->DrawLine(pen, S[i].start.x, (float)yt, S[i].end.x, (float)yt);
-			}
-			if ((int)S[i].start.y == yt) {
+		if (yt == ySNext) {
+			for (int i = 0; i < S.Count; i++) {
+				if ((int)S[i].start.y == yt) {
+					if ((int)S[i].start.y != (int)S[i].end.y) {
+						float dx = (S[i].end.x - S[i].start.x) / (float)(S[i].end.y - S[i].start.y);
+						ternary^ t = { S[i].start.x, S[i].end.y, dx };
+						AEL.Add(t);
+					}
+					else {
+						g->DrawLine(pen, S[i].start.x, (float)yt, S[i].end.x, (float)yt);
+					}
 					S.RemoveAt(i);
 					i--;
-			}
-
-		}
-		if (!AEL.Count) return;
-		
-		for (int i = AEL.Count - 1; i >= 0; i--) {
-			for (int j = 0; j < i; j++) {
-				if (AEL[j][0] - AEL[j + 1][0] > 0) {
-					ternary^ t = AEL[i];
-					AEL[i] = AEL[j];
-					AEL[j] = t;
-				}
-				if (AEL[j][0] == AEL[j + 1][0] && AEL[j][2] > AEL[j + 1][2]) {
-					ternary^ t = AEL[i];
-					AEL[i] = AEL[j];
-					AEL[j] = t;
 				}
 			}
-		}
 
-		int yNext = AEL[0][1];
-		for (int i = 0; i < AEL.Count; i++)
-			if (yNext > (int)AEL[i][1])
-				yNext = AEL[i][1];
-		if (S.Count)
-			yNext = std::min((int)S[0].start.y, yNext);
-
-		while (yt < yNext) {
-			for (int i = 0; i < AEL.Count; i += 2) {
-				g->DrawLine(pen, AEL[i][0], (float)yt, AEL[i+1][0], (float)yt);
-				AEL[i][0] += AEL[i][2];
-				AEL[i+1][0] += AEL[i+1][2];
+			for (int i = 0; i < AEL.Count; i++) {
+				for (int j = 0; j < AEL.Count - i - 1; j++) {
+					if (AEL[j][0] > AEL[j + 1][0]) {
+						ternary^ t = AEL[j];
+						AEL[j] = AEL[j + 1];
+						AEL[j + 1] = t;
+					}
+					if (AEL[j][0] == AEL[j + 1][0] && AEL[j][2] > AEL[j + 1][2]) {
+						ternary^ t1 = AEL[j];
+						AEL[j] = AEL[j + 1];
+						AEL[j + 1] = t1;
+					}
+				}
 			}
-			yt++;
+
+			if (S.Count != 0)
+				ySNext = S[0].start.y;
+
+			for (int i = 0; i < AEL.Count; i++) {
+				if ((int)AEL[i][1] < yAELNext && (int)AEL[i][1] != yt) {
+					yAELNext = AEL[i][1];
+				}
+			}
 		}
 
-		for (int i = AEL.Count - 1; i >= 0; i--) {
-			if ((int)AEL[i][1] <= yt) {
-				AEL.RemoveAt(i);
+		for (int i = 0; i < AEL.Count - 1; i += 2) {
+			g->DrawLine(pen, AEL[i][0], (float)yt, AEL[i+1][0], (float)yt);
+			AEL[i][0] += AEL[i][2];
+			AEL[i+1][0] += AEL[i+1][2];
+		}
+		yt++;
+
+		if (yt >= yAELNext) {
+			for (int i = 0; i < AEL.Count; i++) {
+				if ((int)AEL[i][1] <= yt) {
+					AEL.RemoveAt(i);
+					i--;
+				}
+			}
+
+			for (int i = 0; i < AEL.Count; i++) {
+				if ((int)AEL[i][1] < yAELNext && (int)AEL[i][1] != yt) {
+					yAELNext = AEL[i][1];
+				}
 			}
 		}
 	}
