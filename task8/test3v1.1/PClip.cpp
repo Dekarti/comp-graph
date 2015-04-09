@@ -126,9 +126,7 @@ polygon^ Pclip (polygon^ P, point Pmin, point Pmax) {
 
 
 int compareByStartY(line l1, line l2) {
-	if (l1.start.y == l2.start.y) return 0;
-	if (l1.start.y > l2.start.y)  return 1;
-	return -1;
+	return floor(l1.start.y - l2.start.y);
 }
 
 void PFill (polygon^ P, System::Drawing::Bitmap^ image, System::Drawing::Color C) {
@@ -151,6 +149,7 @@ void PFill (polygon^ P, System::Drawing::Bitmap^ image, System::Drawing::Color C
 			line l = {B, A};
 			S.Add(l);
 		}
+
 		k++;
 		A = B;
 	}
@@ -177,9 +176,11 @@ void PFill (polygon^ P, System::Drawing::Bitmap^ image, System::Drawing::Color C
 						ternary^ t = { S[i].start.x, S[i].end.y, dx };
 						AEL.Add(t);
 					}
+
 					else {
 						g->DrawLine(pen, S[i].start.x, (float)yt, S[i].end.x, (float)yt);
 					}
+
 					S.RemoveAt(i);
 					i--;
 				}
@@ -192,6 +193,7 @@ void PFill (polygon^ P, System::Drawing::Bitmap^ image, System::Drawing::Color C
 						AEL[j] = AEL[j + 1];
 						AEL[j + 1] = t;
 					}
+
 					if (AEL[j][0] == AEL[j + 1][0] && AEL[j][2] > AEL[j + 1][2]) {
 						ternary^ t1 = AEL[j];
 						AEL[j] = AEL[j + 1];
