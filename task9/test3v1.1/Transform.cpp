@@ -191,7 +191,21 @@ void move(float Tx, float Ty, float Tz, mat3D &c) {
 }
 
 void rotate(point3D n, float phi, mat3D &c) {
+	float n1 = n.x;
+	float n2 = n.y;
+	float n3 = n.z;
 
+	c[0][0] = n1 * n1 + (1 - n1 * n1) * cos(phi);
+	c[0][1] = n1 * n2 * (1 - cos(phi)) - n3 * sin(phi);
+	c[0][2] = n1 * n3 * (1 - cos(phi)) + n2 * sin(phi);
+
+	c[1][0] = n1 * n2 * (1 - cos(phi)) + n3 * sin(phi);
+	c[1][1] = n2 * n2 + (1 - n2 * n2) * cos(phi);
+	c[1][2] = n2 * n3 * (1 - cos(phi)) - n1 * sin(phi);
+
+	c[2][0] = n1 * n3 * (1 - cos(phi)) - n2 * sin(phi);
+	c[2][1] = n2 * n3 * (1 - cos(phi)) + n1 * sin(phi);
+	c[2][2] = n3 * n3 + (1 - n3 * n3) * cos(phi);
 }
 
 void scale(float Sx, float Sy, float Sz, mat3D &c) {

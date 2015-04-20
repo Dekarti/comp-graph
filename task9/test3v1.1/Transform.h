@@ -62,7 +62,7 @@ void vec2point(vec3D a, point3D &b);
 void makeHomogenVec(float x, float y, float z, vec3D &c);
 void unit(mat3D &a);
 void move(float Tx, float Ty, float Tz, mat3D &c);
-void rotate(float phi, mat3D &c);
+void rotate (point3D n, float phi, mat3D &c);
 void scale(float S, mat3D &c);
 
 vec3D operator+ (vec3D &a, vec3D &b);
