@@ -69,6 +69,9 @@ vec3D operator+ (vec3D &a, vec3D &b);
 vec3D operator- (vec3D &a, vec3D &b);
 vec3D operator* (float k , vec3D a);
 vec3D normalize (vec3D &a);
+point3D normalize (point3D &a);
+void crossProduct(vec3D a, vec3D b, vec3D &c);
+void crossProduct(point3D a, point3D b, point3D &c);
 
 void LookAt (point3D eye, point3D center, point3D up, mat3D &c);
 

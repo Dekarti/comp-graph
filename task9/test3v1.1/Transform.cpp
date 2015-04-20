@@ -254,10 +254,24 @@ vec3D normalize (vec3D &a) {
 	return c;
 }
 
+point3D normalize (point3D &a) {
+	vec3D b;
+	point2vec(a, b);
+	normalize(b);
+	vec2point(b, a);
+	return a;
+}
+
 void crossProduct(vec3D a, vec3D b, vec3D &c) {
 	c[0] = a[1] * b[2] - a[2] * b[1];
     c[1] = a[2] * b[0] - a[0] * b[2];
     c[2] = a[0] * b[1] - a[1] * b[0];
+}
+
+void crossProduct(point3D a, point3D b, point3D &c) {
+	c.x = a.y * b.z - a.z * b.y;
+    c.y = a.z * b.x - a.x * b.z;
+    c.z = a.x * b.y - a.y * b.x;
 }
 
 /*****************************************************************/
