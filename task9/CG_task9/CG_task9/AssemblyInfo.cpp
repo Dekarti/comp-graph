@@ -7,6 +7,20 @@ using namespace System::Runtime::InteropServices;
 using namespace System::Security::Permissions;
 
 //
+// General Information about an assembly is controlled through the following
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+//
+[assembly:AssemblyTitleAttribute("test3v1.1")];
+[assembly:AssemblyDescriptionAttribute("")];
+[assembly:AssemblyConfigurationAttribute("")];
+[assembly:AssemblyCompanyAttribute("")];
+[assembly:AssemblyProductAttribute("test3v1.1")];
+[assembly:AssemblyCopyrightAttribute("Copyright (c)  2015")];
+[assembly:AssemblyTrademarkAttribute("")];
+[assembly:AssemblyCultureAttribute("")];
+
+//
 // Version information for an assembly consists of the following four values:
 //
 //      Major Version

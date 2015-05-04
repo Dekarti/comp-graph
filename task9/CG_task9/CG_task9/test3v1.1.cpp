@@ -3,16 +3,15 @@
 #include "stdafx.h"
 #include <fstream>
 #include <sstream>
-#include <stack>
 #include <cmath>
 #include "Transform.h"
+#include "PClip.h"
 #include "Form1.h"
 
 using namespace test3v11;
 
 [STAThreadAttribute]
-int main(array<System::String ^> ^args)
-{
+int main(array<System::String ^> ^args) {
 	// Enabling Windows XP visual effects before any controls are created
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false); 

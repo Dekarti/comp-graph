@@ -1,1 +1,0 @@
-polygon^ Pclip (polygon^ P, point Pmin, point Pmax);

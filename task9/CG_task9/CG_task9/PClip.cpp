@@ -4,7 +4,7 @@
 
 #define INFINITY float::MaxValue
 
-polygon^ Pclip (polygon^ P, point Pmin, point Pmax) {
+polygon^ PÑlip (polygon^ P, point Pmin, point Pmax) {
 	polygon^ P1 = gcnew polygon(0);
 	point A = P[P->Count - 1];
 	int k = 0;

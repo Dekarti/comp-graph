@@ -18,8 +18,8 @@
 
 // Icon placed first or with lowest ID value becomes application icon
 
-LANGUAGE 25, 1
-#pragma code_page(1251)
+LANGUAGE 9, 1
+#pragma code_page(1252)
 1           ICON         "app.ico"
 
 #ifdef APSTUDIO_INVOKED
