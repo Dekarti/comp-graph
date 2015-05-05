@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="windows-1251"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="test3v1.1"
-	ProjectGUID="{68BC210D-9CE3-406F-82A5-F128DC2796E1}"
-	RootNamespace="CG_task9"
+	ProjectGUID="{6CB1042B-E7B1-4D3B-B14D-BBBEAD339F9A}"
+	RootNamespace="test3v11"
 	Keyword="ManagedCProj"
 	TargetFrameworkVersion="196613"
 	>
@@ -239,13 +239,12 @@
 			>
 			<File
 				RelativePath=".\Form1.h"
-				FileType="3"
 				>
-				<File
-					RelativePath=".\Form1.resX"
-					SubType="Designer"
-					>
-				</File>
+			</File>
+			<File
+				RelativePath=".\Form1.resx"
+				SubType="Designer"
+				>
 			</File>
 			<File
 				RelativePath=".\PClip.h"

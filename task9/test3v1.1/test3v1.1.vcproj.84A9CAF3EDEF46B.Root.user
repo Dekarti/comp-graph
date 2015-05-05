@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="windows-1251"?>
 <VisualStudioUserFile
 	ProjectType="Visual C++"
 	Version="9,00"
@@ -15,7 +15,7 @@
 				Attach="false"
 				DebuggerType="3"
 				Remote="1"
-				RemoteMachine="W12-416-25"
+				RemoteMachine="84A9CAF3EDEF46B"
 				RemoteCommand=""
 				HttpUrl=""
 				PDBPath=""
@@ -43,7 +43,7 @@
 				Attach="false"
 				DebuggerType="3"
 				Remote="1"
-				RemoteMachine="W12-416-25"
+				RemoteMachine="84A9CAF3EDEF46B"
 				RemoteCommand=""
 				HttpUrl=""
 				PDBPath=""
