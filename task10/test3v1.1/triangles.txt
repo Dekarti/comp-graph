@@ -1,0 +1,22 @@
+lookat 10 10 3 0 0 0 0 1 0
+screen 190 2 250
+
+color 255 000 000
+triangle 1 -1 0 0 -1 1 0 -1 -1
+triangle -1 -1 0 0 -1 1 0 -1 -1
+
+color 000 000 255
+triangle 1 1 0 0 1 1 0 1 -1
+triangle -1 1 0 0 1 1 0 1 -1
+
+color 000 000 000
+triangle 1 -1 0 1 1 0 0 -1 1
+triangle 1 1 0 0 1 1 0 -1 1
+
+color 100 100 100
+triangle 1 -1 0 1 1 0 0 1 -1
+triangle 1 -1 0 0 1 -1 0 -1 -1
+
+color 255 255 000
+triangle -1 -1 0 -1 1 0 0 1 -1
+triangle -1 -1 0 0 1 -1 0 -1 -1

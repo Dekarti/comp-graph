@@ -1,0 +1,22 @@
+lookat 2 2 2 0 0 0 0 1 0
+screen 180 15 35
+
+color 255 0 0
+triangle 1 -1 0 0 -1 1 0 -1 -1
+triangle -1 -1 0 0 -1 1 0 -1 -1
+
+color 0 0 255
+triangle 1 1 0 0 1 1 0 1 -1
+triangle -1 1 0 0 1 1 0 1 -1
+
+color 0 255 0
+triangle 1 -1 0 1 1 0 0 -1 1
+triangle 1 1 0 0 1 1 0 -1 1
+
+color 0 255 255
+triangle 1 -1 0 1 1 0 0 1 -1
+triangle 1 -1 0 0 1 -1 0 -1 -1
+
+color 255 255 0
+triangle -1 -1 0 -1 1 0 0 1 -1
+triangle -1 -1 0 0 1 -1 0 -1 -1
