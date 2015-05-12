@@ -27,16 +27,19 @@ int calculateCode(point A, point Pmin, point Pmax) {
 int isTrivialVisible(point A, point B, point Pmin, point Pmax) {
 	int codeA = calculateCode(A, Pmin, Pmax);
 	int codeB = calculateCode(B, Pmin, Pmax);
-	if (!(codeA | codeB)) return 1;
-	if (codeA && codeB) return 0;
+	if (!(codeA | codeB))
+		return 1;
+	if (codeA & codeB)
+		return 0;
 	return -1;
 }
 
 void clip(point A, point B, point Pmin, point Pmax, Graphics^ g, Pen^ pen) {
+
 	point mid;
 
-	if ((A.x - B.x) * (A.x - B.x) + (A.y - B.y) * (A.y - B.y) <= 2) return;
-	if (A.x == B.x && A.y == B.y) return;
+	if ((A.x - B.x) * (A.x - B.x) + (A.y - B.y) * (A.y - B.y) <= 2) 
+		return;
 
 	if (isTrivialVisible(A, B, Pmin, Pmax) == 1) {
 		g->DrawLine(pen, A.x, A.y, B.x, B.y);
@@ -46,7 +49,7 @@ void clip(point A, point B, point Pmin, point Pmax, Graphics^ g, Pen^ pen) {
 		mid.x = (A.x + B.x) / 2;
 		mid.y = (A.y + B.y) / 2;
 		clip(mid, B, Pmin, Pmax, g, pen);
-		clip(A, mid, Pmin, Pmax, g, pen); 
+		clip(A, mid, Pmin, Pmax, g, pen);
 	}
 }
 
